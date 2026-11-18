@@ -79,6 +79,7 @@ enum L10nKey: String, CaseIterable, Sendable {
     case manageAccount, manageAccountDetail, signOut, signOutDetail, signOutConfirmTitle, signOutConfirmDetail
     case notSignedIn, notSignedInDetail, sessionExpired, sessionExpiredDetail, identityUnavailable
     case signedInLabel, privacySection, privacyDetail
+    case apiKeyModel, apiKeyModelDetail
     case apiKeyAdd, apiKeyTitle, apiKeyDetail, apiKeyPlaceholder, apiKeyGet
     case apiKeySaved, apiKeySavedDetail, apiKeyRemove, apiKeyRemoveConfirmTitle, apiKeyRemoveConfirmDetail
     case privacyDetailLocal
@@ -435,6 +436,8 @@ struct L10n: Sendable, Equatable {
         case .apiKeyDetail: Strings(en: "Suggestions use your own key. It is stored encrypted on this Mac and sent only to AI Gateway.", es: "Las sugerencias usan tu propia clave. Se guarda cifrada en este Mac y solo se envía a AI Gateway.")
         case .apiKeyPlaceholder: Strings(en: "Paste your key", es: "Pega tu clave")
         case .apiKeyGet: Strings(en: "Get a key…", es: "Obtener una clave…")
+        case .apiKeyModel: Strings(en: "Model", es: "Modelo")
+        case .apiKeyModelDetail: Strings(en: "Through Vercel AI Gateway.", es: "A través de Vercel AI Gateway.")
         case .apiKeySaved: Strings(en: "Key saved", es: "Clave guardada")
         case .apiKeySavedDetail: Strings(en: "Suggestions run on this Mac with your AI Gateway key.", es: "Las sugerencias se ejecutan en este Mac con tu clave de AI Gateway.")
         case .apiKeyRemove: Strings(en: "Remove Key…", es: "Quitar clave…")

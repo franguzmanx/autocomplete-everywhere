@@ -3,6 +3,7 @@ import { createGateway, GatewayAuthenticationError } from "@ai-sdk/gateway";
 import { createApi, createMemoryLeasePool } from "./compose.js";
 
 /** The single user of an API that runs inside the desktop app. */
+export { GENERATION_MODEL_ID } from "./compose.js";
 export const LOCAL_USER_ID = "local";
 
 export type LocalApi = {

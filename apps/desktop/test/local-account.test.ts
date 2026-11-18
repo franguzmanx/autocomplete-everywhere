@@ -21,7 +21,7 @@ function setup(stored: unknown = null, verdict: "accepted" | "rejected" | "unver
 describe("local account", () => {
   test("asks for a key and refuses requests until one is saved", async () => {
     const { account, state } = setup();
-    expect(state.snapshot().account).toEqual({ state: "signed_out", identity: null, kind: "api_key" });
+    expect(state.snapshot().account).toEqual({ state: "signed_out", identity: null, kind: "api_key", model: "google/gemini-3.5-flash-lite" });
     await account.initialize();
     expect(state.snapshot().account.state).toBe("signed_out");
     await expect(account.tokenProvider.getAccessToken()).rejects.toThrow("unauthorized");
@@ -46,6 +46,7 @@ describe("local account", () => {
       state: "signed_in",
       identity: { subject: "local", name: "", email: "" },
       kind: "api_key",
+      model: "google/gemini-3.5-flash-lite",
     });
     const token = await account.tokenProvider.getAccessToken();
     expect((await account.request(`${LOCAL_API_ORIGIN}/health`)).status).toBe(200);
@@ -65,7 +66,7 @@ describe("local account", () => {
     expect(state.snapshot().account.state).toBe("signed_in");
     await account.signOut();
     expect(stored()).toEqual({});
-    expect(state.snapshot().account).toEqual({ state: "signed_out", identity: null, kind: "api_key" });
+    expect(state.snapshot().account).toEqual({ state: "signed_out", identity: null, kind: "api_key", model: "google/gemini-3.5-flash-lite" });
     expect((await account.request(`${LOCAL_API_ORIGIN}/health`)).status).toBe(401);
   });
 });

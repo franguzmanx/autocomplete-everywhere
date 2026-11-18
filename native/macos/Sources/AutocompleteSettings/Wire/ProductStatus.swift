@@ -39,6 +39,8 @@ struct AccountStatus: Codable, Sendable, Equatable {
     var state: AccountState
     var identity: AccountIdentity?
     var kind: AccountKind? = nil
+    /// Model that answers suggestions.
+    var model: String? = nil
 
     /// The credential is the user's own AI Gateway key, entered in this window.
     var usesApiKey: Bool { kind == .apiKey }

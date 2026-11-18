@@ -1,4 +1,5 @@
 import {
+  GENERATION_MODEL_ID,
   LOCAL_USER_ID,
   createLocalApi,
   verifyGatewayKey,
@@ -44,7 +45,7 @@ export class LocalAccount implements Account {
 
   constructor(private readonly options: Options) {
     // Settings must offer the key field, not a sign-in, before the store is read.
-    options.state.update({ account: { state: "signed_out", identity: null, kind: "api_key" } });
+    options.state.update({ account: { state: "signed_out", identity: null, kind: "api_key", model: GENERATION_MODEL_ID } });
   }
 
   /** Stands in for `fetch` in every API transport. */
@@ -55,7 +56,7 @@ export class LocalAccount implements Account {
 
   private publish(state: "signed_in" | "signed_out" | "expired"): void {
     this.options.state.update({
-      account: { state, identity: state === "signed_in" ? IDENTITY : null, kind: "api_key" },
+      account: { state, identity: state === "signed_in" ? IDENTITY : null, kind: "api_key", model: GENERATION_MODEL_ID },
       ...(state === "signed_in" ? { connection: "ready" as const } : {}),
     });
     this.options.changed();

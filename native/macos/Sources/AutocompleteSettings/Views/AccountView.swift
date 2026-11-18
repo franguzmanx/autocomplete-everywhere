@@ -162,6 +162,20 @@ private struct ApiKeySection: View {
         key = ""
     }
 
+    @ViewBuilder private var modelRow: some View {
+        if let model = store.status?.account.model {
+            HStack(spacing: 16) {
+                TitleDetail(l10n[.apiKeyModel], detail: l10n[.apiKeyModelDetail])
+                Spacer(minLength: 8)
+                Text(model)
+                    .font(.callout.monospaced())
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
+            }
+            .padding(.vertical, 4)
+        }
+    }
+
     var body: some View {
         if isSaved {
             Section {
@@ -178,6 +192,7 @@ private struct ApiKeySection: View {
                     }
                 }
                 .padding(.vertical, 4)
+                modelRow
             }
             Section {
                 ActionRow(
@@ -202,6 +217,7 @@ private struct ApiKeySection: View {
                 }
                 Link(l10n[.apiKeyGet], destination: Self.keysURL)
             }
+            Section { modelRow }
         }
     }
 }

@@ -75,6 +75,8 @@ export type ProductStatus = {
     identity: AccountIdentity | null;
     /** Present when the credential is the user's own AI Gateway key. */
     kind?: "api_key";
+    /** Model that answers suggestions, shown in Settings. */
+    model?: string;
   };
   enabled: boolean;
   activity: SuggestionActivitySummary;
