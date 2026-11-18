@@ -38,6 +38,9 @@ jobs:
       - name: Run TypeScript tests
         run: bun run test
 
+      - name: Install SQLCipher
+        run: brew install sqlcipher pkgconf
+
       - name: Test Swift helper
         run: swift test --package-path native/macos
 

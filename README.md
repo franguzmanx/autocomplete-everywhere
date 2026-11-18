@@ -69,6 +69,7 @@ There are two modes:
 
 - macOS 14 or later on Apple Silicon, with Xcode.
 - [Bun](https://bun.sh) 1.3.14.
+- SQLCipher and pkg-config: `brew install sqlcipher pkgconf`.
 - A [Vercel AI Gateway](https://vercel.com/ai-gateway) API key.
 
 ## Quick start
