@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autocomplete Everywhere Surface Lab</title>
+    <style>
+      :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: Canvas; color: CanvasText; }
+      main { width: min(920px, calc(100% - 40px)); margin: 42px auto 80px; }
+      header { display: grid; gap: 10px; margin-bottom: 28px; }
+      h1 { margin: 0; font-size: 30px; letter-spacing: -0.03em; }
+      p { margin: 0; color: color-mix(in srgb, CanvasText 64%, transparent); line-height: 1.45; }
+      .samples { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 30px; }
+      button { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 999px; padding: 8px 12px; background: color-mix(in srgb, CanvasText 7%, Canvas); color: CanvasText; font: inherit; cursor: pointer; }
+      button:hover { background: color-mix(in srgb, CanvasText 12%, Canvas); }
+      #status { min-height: 22px; font-size: 13px; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      section { padding: 18px; border: 1px solid color-mix(in srgb, CanvasText 14%, transparent); border-radius: 16px; background: color-mix(in srgb, CanvasText 3%, Canvas); }
+      section h2 { margin: 0 0 5px; font-size: 15px; }
+      section p { margin-bottom: 14px; font-size: 13px; }
+      input, textarea, [contenteditable] { width: 100%; border: 1px solid color-mix(in srgb, CanvasText 22%, transparent); border-radius: 10px; padding: 11px 12px; background: Canvas; color: CanvasText; font: 15px/1.45 -apple-system, BlinkMacSystemFont, sans-serif; letter-spacing: normal; outline: none; }
+      input:focus, textarea:focus, [contenteditable]:focus { border-color: AccentColor; box-shadow: 0 0 0 3px color-mix(in srgb, AccentColor 18%, transparent); }
+      textarea { min-height: 116px; resize: vertical; }
+      textarea[data-surface="auto-grow"] { min-height: 46px; resize: none; overflow: hidden; }
+      [contenteditable] { min-height: 116px; white-space: pre-wrap; }
+      .wide { grid-column: 1 / -1; }
+      .secure { border-color: color-mix(in srgb, #e5484d 55%, transparent); }
+      @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Surface Lab</h1>
+        <p>Local development only. Copy a sample, focus a field, and type its first character. Test Tab, click, Escape, wrapping, focus changes, and silence in the password field.</p>
+      </header>
+
+      <div class="samples" aria-label="Clipboard samples">
+        <button type="button" data-copy="Una frase breve para probar.">Copy short · U</button>
+        <button type="button" data-copy="Mientras escribimos, la sugerencia debe permanecer alineada, envolver palabras completas y aceptar únicamente el texto visible y vigente.">Copy wrap · M</button>
+        <button type="button" data-copy="Árbol, café, mañana, emoji 🚀 y 日本語 deben conservarse exactamente.">Copy Unicode · Á</button>
+        <button type="button" data-copy="مرحبا، يجب أن يبقى النص متصلاً ومحاذياً للمؤشر.">Copy RTL · م</button>
+      </div>
+      <p id="status" role="status" aria-live="polite"></p>
+
+      <div class="grid">
+        <section>
+          <h2>Single line</h2>
+          <p>Width, font matching, Tab, click and Escape.</p>
+          <input data-surface="single-line" type="text" autocomplete="off" spellcheck="false" placeholder="Type the first character" />
+        </section>
+
+        <section class="secure">
+          <h2>Secure field</h2>
+          <p>Must always remain silent.</p>
+          <input type="password" autocomplete="new-password" placeholder="No suggestion allowed" />
+        </section>
+
+        <section class="wide">
+          <h2>Wrapped textarea</h2>
+          <p>Word wrapping, multiline acceptance and edge clipping.</p>
+          <textarea data-surface="wrapped-textarea" spellcheck="false" placeholder="Type the first character"></textarea>
+        </section>
+
+        <section>
+          <h2>Auto-grow textarea</h2>
+          <p>The host field changes height while typing.</p>
+          <textarea data-surface="auto-grow" spellcheck="false" rows="1" placeholder="Type the first character"></textarea>
+        </section>
+
+        <section>
+          <h2>Contenteditable</h2>
+          <p>Rich web surface and focus reacquisition.</p>
+          <div data-surface="contenteditable" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="false"></div>
+        </section>
+
+        <section class="wide">
+          <h2>Empty field with nearby context</h2>
+          <p>Focus the empty subject. The body is the only authored context available.</p>
+          <label for="context-subject">Subject</label>
+          <input id="context-subject" data-surface="context-subject" type="text" autocomplete="off" spellcheck="false" />
+          <label for="context-body">Message body</label>
+          <textarea id="context-body" data-surface="context-body" spellcheck="false">Hola Dana, te comparto la propuesta actualizada para revisar mañana.</textarea>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const status = document.querySelector("#status");
+      const fallback = document.createElement("textarea");
+      fallback.setAttribute("aria-hidden", "true");
+      fallback.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+      document.body.append(fallback);
+
+      async function copySample(text, label) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          fallback.value = text;
+          fallback.select();
+          document.execCommand("copy");
+        }
+        status.textContent = `${label} copied. Focus a field and type the character after ·`;
+      }
+
+      document.querySelectorAll("[data-copy]").forEach((button) => {
+        button.addEventListener("click", () => copySample(button.dataset.copy, button.textContent));
+      });
+
+      const autoGrow = document.querySelector('[data-surface="auto-grow"]');
+      autoGrow.addEventListener("input", () => {
+        autoGrow.style.height = "auto";
+        autoGrow.style.height = `${autoGrow.scrollHeight}px`;
+      });
+    </script>
+  </body>
+</html>

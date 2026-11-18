@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Autocomplete Everywhere Context Lab</title>
+<style>
+  body { margin: 40px; font: 16px/1.5 -apple-system, sans-serif; color: #222; background: #fff; }
+  h1 { font-size: 24px; }
+  section { padding: 20px; border: 1px solid #ddd; border-radius: 12px; margin: 18px 0; }
+  [contenteditable] { padding: 12px; min-height: 64px; border: 1px solid #aaa; border-radius: 8px; outline-color: #007aff; }
+  p { margin: 10px 0; }
+  .hint { color: #777; font-size: 13px; }
+  button { font: inherit; padding: 6px 12px; }
+</style>
+<h1>Autocomplete Everywhere Context Lab</h1>
+<div role="group" aria-label="Test controls">
+  <button id="change">Change message</button>
+  <button id="switch">Switch conversation</button>
+</div>
+<section role="group" aria-label="Conversation">
+  <div role="group" aria-label="Message history">
+    <div role="group" aria-label="Message content">
+      <div role="group" aria-label="Message text">
+        <p id="message">Dana: Please send the revised Jacaranda proposal by Thursday at 16:00.</p>
+      </div>
+    </div>
+  </div>
+  <div role="group" aria-label="Composer">
+    <div role="group" aria-label="Editor controls">
+      <p class="hint">Markdown formatting is available.</p>
+      <div id="qa-editor" contenteditable="true" role="textbox" aria-label="QA reply" aria-multiline="true" spellcheck="false">Autocomplete Everywhere QA — Yes, I will send</div>
+    </div>
+  </div>
+</section>
+<script>
+  let changed = false;
+  document.querySelector('#change').onclick = () => {
+    changed = !changed;
+    document.querySelector('#message').textContent = changed
+      ? 'Dana: Please send the revised Jacaranda proposal by Monday at 10:00.'
+      : 'Dana: Please send the revised Jacaranda proposal by Thursday at 16:00.';
+  };
+  document.querySelector('#switch').onclick = () => {
+    document.querySelector('#message').textContent = 'Lucia: For Saturday dinner, can you bring a chocolate cake without nuts?';
+    document.querySelector('#qa-editor').textContent = 'Autocomplete Everywhere QA — Yes, I can bring';
+  };
+</script>
+</html>

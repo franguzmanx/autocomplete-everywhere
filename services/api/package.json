@@ -1,0 +1,27 @@
+{
+  "name": "@autocompletion/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@autocompletion/protocol": "workspace:*",
+    "@clerk/backend": "3.16.13",
+    "@hono/node-server": "2.1.1",
+    "ai": "7.0.84",
+    "hono": "4.13.5",
+    "zod": "4.5.2",
+    "@ai-sdk/gateway": "4.0.68"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "@ai-sdk/cerebras": "3.0.43"
+  },
+  "license": "MIT"
+}

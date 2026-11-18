@@ -1,0 +1,94 @@
+{
+  "name": "@autocompletion/desktop",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Context-rich autocomplete across desktop apps",
+  "author": "Autocomplete Everywhere contributors",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "bun run build:mac-helper && electron-vite dev",
+    "surface:lab": "open -a Safari dev/surface-lab.html",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "trace:summary": "bun scripts/summarize-pipeline-trace.ts",
+    "build": "electron-vite build",
+    "build:mac-helper": "bun run build:brand && node scripts/build-mac-native.mjs",
+    "package:dir": "bun run build:mac-helper && bun run build && electron-builder --dir",
+    "package:mac": "bun run build:mac-helper && bun run build && electron-builder --mac dir --config.mac.timestamp=none",
+    "package:mac:qa": "bun run package:mac && node scripts/verify-mac-package.mjs",
+    "build:brand": "node scripts/build-brand-icons.mjs"
+  },
+  "dependencies": {
+    "@autocompletion/protocol": "workspace:*",
+    "zod": "4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "electron": "44.0.0",
+    "electron-builder": "26.15.3",
+    "electron-vite": "5.0.0",
+    "typescript": "5.9.3",
+    "vite": "8.2.2",
+    "vitest": "3.2.7"
+  },
+  "build": {
+    "appId": "com.autocompletion.desktop",
+    "productName": "AutocompleteEverywhere",
+    "executableName": "AutocompleteEverywhere",
+    "asar": true,
+    "files": [
+      "out/**/*",
+      "package.json",
+      "resources/brand/trayTemplate*.png"
+    ],
+    "mac": {
+      "target": [
+        "dir"
+      ],
+      "extendInfo": {
+        "NSAudioCaptureUsageDescription": null,
+        "NSBluetoothAlwaysUsageDescription": null,
+        "NSBluetoothPeripheralUsageDescription": null,
+        "NSCameraUsageDescription": null,
+        "NSMicrophoneUsageDescription": null,
+        "CFBundleIconName": "AutocompleteEverywhere",
+        "CFBundleDisplayName": "Autocomplete Everywhere"
+      },
+      "extraResources": [
+        {
+          "from": "../../native/macos/.build/release/AutocompleteHelper",
+          "to": "native/AutocompleteHelper"
+        },
+        {
+          "from": "../../native/macos/.build/release/AutocompleteContextService",
+          "to": "native/AutocompleteContextService"
+        },
+        {
+          "from": "../../native/macos/.build/sqlcipher/install/LICENSE",
+          "to": "native/SQLCipher-LICENSE"
+        },
+        {
+          "from": "native-ui/AutocompleteEverywhere.app",
+          "to": "native/AutocompleteEverywhere.app"
+        },
+        {
+          "from": "build/Assets.car",
+          "to": "Assets.car"
+        }
+      ],
+      "icon": "build/AutocompleteEverywhere.icns"
+    },
+    "linux": {
+      "target": [
+        "dir"
+      ]
+    },
+    "win": {
+      "target": [
+        "dir"
+      ]
+    }
+  },
+  "license": "MIT"
+}

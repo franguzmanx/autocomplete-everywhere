@@ -1,0 +1,106 @@
+# Autocomplete Everywhere everyday-use readiness
+
+Active work from the user's September 5 request to finish reliability, contextual understanding, speed and first-use recovery. This checklist is an acceptance record, not a reduced replacement for the product scope in `mvp.md` and `scenario-atlas.md`.
+
+| Requirement | Current evidence | Remaining proof |
+| --- | --- | --- |
+| Suggestions appear and insert in the actual writing field | Packaged TextEdit, practice, controlled Electron rich editor and textarea accept real system Tab | User-reported Codex failure unresolved; real email, Slack and social reply journeys; empty fields, wrapping, scrolling and focus changes |
+| Understand the current message/post and destination | Nested Electron conversation, revised deadline and unrelated conversation switch produced correct accepted replies | Real email/Slack/social layouts, recipient identity and unrelated feed content; expand beyond the three controlled cases |
+| Relevant context without contamination | AX source capture and temporary observed writing are connected; Library is disabled by user request | Real current-thread/post binding and cross-topic exclusion; durable knowledge scenarios remain deferred |
+| Useful speed and interruption behavior | Latest three controlled request-to-presentation samples: 0.69, 0.75 and 2.09 s; timing controls wired | Keystroke-to-useful-text distribution including silence/failure, automatic versus invoked use, editing and interruption cases |
+| First successful use and recovery | Sign-in, permissions, native settings, pause/resume and shortcut recording exercised on the development Mac | Fresh install/account/permission journey; revoked permissions, shortcut conflicts, restart/sleep, network/auth failure and truthful recovery state |
+| Release artifact | Signed development package passes integrity checks | Repeat affected real journeys in the final package; distribution/notarization and clean installation remain separate gates |
+
+The active engine remains Qwen 3.8 27B/Cerebras with one validated final response. OCR/visual understanding, automatic durable learning, offscreen history and connectors are not implemented; those larger-vision capabilities remain separate from the current MVP.
+
+## Current investigation
+
+The nested conversation fixture in `apps/desktop/dev/context-lab.html` exposed a visible-message capture failure after adding ordinary layout containers. `LiveContextLabTests` is opt-in and only reads the separate Electron fixture titled **Autocomplete Everywhere Context Lab**. It cannot be pointed at arbitrary application IDs or PIDs. The tool's prohibition on controlling Codex is respected; controlled fixtures do not establish Codex compatibility.
+
+Run the fixture with the repository's Electron binary and focus its reply field. Set `AUTOCOMPLETION_CONTEXT_LAB=1` only when running the focused live test. See `intelligence-implementation.md` for dated package/request evidence.
+
+## Real LinkedIn follow-up — September 5
+
+- A started comment received a post-relevant continuation, displayed after 911 ms and inserted by a real Tab (`54EF6314-F92F-4EF2-8807-984E24C6A511`). The temporary draft was cleared; nothing was posted. The preceding attempts remain failures: a mid-paragraph renderer rejection and a model silence. One success is not a reliability rate.
+- Mid-paragraph presentation is currently unsupported: `GhostTextPresenter` requires the caret at a paragraph end to avoid overlaying existing suffix text. This remains an unmet editing case, not a model failure or a reason to remove safe rendering checks.
+- An actually empty comment exposes generated placeholder text in native AXValue and marker ranges. Native selection is after that generated text, while the selected line is empty. The exact caret and the preceding generated-content glyph disagreed, causing unavailable geometry. The reader now keeps an exact caret corroborated by the empty line range rather than a glyph outside that line. No text is stripped or rewritten by this geometry change.
+- `LiveWebEditorTests` is an opt-in, read-only Chrome/LinkedIn check (`AUTOCOMPLETION_EMPTY_COMMENT_QA=1`) with separate geometry and authored-text gates. Current result: **caret passes; placeholder-as-authored-text fails**. The latter is still a release gap. This test does not accept arbitrary app IDs and never types or submits. Chrome must be foreground with an empty comment focused; skipped setup is not acceptance evidence.
+
+## Current Codex failure — still open
+
+The user clarified that Notes works correctly and Codex still fails after typing a sentence. Existing diagnostics showed a glyph outside the input frame with no retained line edge. Candidate priority was being applied in the reader/capture before validation: even an unusable glyph suppressed measured line geometry. The reader and capture now retain that evidence, and the resolver prioritizes only validated glyphs. Focused tests reproduced the defect and all 209 affected capture/resolver/monitor/presenter checks passed. The signed package passed `/tmp/autocompletion-glyph-priority-package.log` and was restarted with parent/helper PIDs 4313/4321. The user's manual check returned **still no ghost text**. The fix retains line edges, but the subsequent trace still rejects the remaining candidates as outside the focused input frame. Notes confirmation and TextEdit screenshots do not close that gate.
+
+The next diagnostic build separates changes to draft, selection, field identity, metadata, related fields and sources. It also reports categorical agreement between marker selection, text node, visual line and field containment, without logging text or coordinates. The first web sample after restart had agreement on selection, node value, current line and containment; only the node/editor height-ratio rule failed. That rule rejects a legitimate editor that is only one line tall. The implementation now requires an actual `AXStaticText` node and matching whole visual-line text, rather than guessing from the relative heights. Editor/group rectangles remain rejected. A regression reproduced the original failure; 220 focused native checks pass. Real Codex acceptance remains pending for this new change; cancellation churn has not yet been attributed to a specific repeatedly changing component.
+
+
+## Current repair follow-up — September 5, 2026
+
+The user again reported no ghost text in Codex and then no visible suggestions anywhere. Autocomplete Everywhere and its helper were running, enabled, and held both required permissions. A controlled TextEdit draft produced a real accepted Tab insertion on request `2F59FC73-6914-4D21-B633-0277D3D01CDF` (about 1.07 s request to presentation). This establishes the native transport/insertion circuit, not Codex compatibility. That QA completion also included unrelated link context; contextual fidelity remains an open gate, and this must not be counted as a quality pass.
+
+Further geometry tests reproduced two rejected-valid-measurement cases: the opposite edge of a marker range could suppress the exact text node, and detached paragraph bounds could suppress a valid current line. The competing marker-range preference was removed; paragraph/line measurements are validated before priority. 222 focused capture/resolver/monitor/presenter/diagnostic checks passed before the context change.
+
+Live content-free diagnostics then correlated repeated `content_changed` cancellation with `source_content` updates on unchanged source identities (and related field updates), even with a resolved caret and empty unchanged draft. The request identity previously included every surrounding text revision. The repair uses a request snapshot of those bodies. The identity still includes the exact draft/selection/focus, field metadata, source/container identities, and full values of companion single-line controls (including recipient changes). Source order alone is irrelevant. Multiline related-field empty/populated transitions still permit initial enrichment. The scene refreshes until the quiet deadline without replacing corroborated geometry; later updates to the same source text are used on the next draft request or explicit request. This intentionally trades continuous background-text revalidation for completion of an in-flight request; it is not a claim that a response incorporates messages arriving after request dispatch. 125 monitor/session/controller/insertion/type-through checks passed, including preserved recipient/target invalidation and stable geometry.
+
+Native UI follow-up replaces Tahoe's floating inset sidebar with a regular AppKit split pane backed by native sidebar material, preserving SwiftUI forms/toolbars, toggle, routing, and language support. Status dot/text have explicit native-row insets. Settings build, six localization checks and three split/window checks passed. Packaged visual verification remains required. Codex success remains unverified until its actual typed-field circuit succeeds.
+
+The user's subsequent packaged screenshot failed that visual gate: the native “General” title crossed the sidebar divider, and the clear window backing exposed content through the divider. The footer inset was improved, but the shell was not visually acceptable. The next repair hides the redundant visible window title, retains its semantic title, and restores a window background behind gaps while preserving the sidebar material. Rendered native-window checks at normal and minimum sizes are required before packaging this repair.
+
+After the request-snapshot package restart, content-free traces show an unchanged empty web field with six context sources completed request `C07F7425-4D44-4D8D-868F-5E8EDECE96D3` in 1.60 s despite ongoing source-body updates. The model returned silence; this is evidence against the earlier cancellation starvation in that sample, not proof of visible Codex suggestions. A separate one-source request `89C7756C-238F-4714-96C7-D1D3603225E1` was presented and accepted. No application identity is recorded in these traces, so neither sample establishes Codex compatibility.
+
+The window repair was visually checked in the signed running package (`/tmp/autocompletion-clean-chrome-packaged.png`): no title collision, transparent divider gap, or clipped footer. The user then requested permanently visible navigation without a collapse button. The toggle, its callback, collapse behavior and unused localization were removed; nine native window/localization checks passed and normal/minimum/Library renders were inspected before repackaging.
+
+Final fixed-navigation package passed `/tmp/autocompletion-fixed-navigation-final-package.log` and was restarted. The running native Settings window was inspected through its own app surface: sidebar remained visible, the collapse control was absent, and the header/divider/footer rendered without the reported defects. Typing Notes into the Applications native search reduced the list to Notes; clearing the query restored all rows. No application enablement was changed. Codex ghost-text acceptance remains a separate open gate.
+
+## Related-field refresh follow-up — September 5
+
+The user's manual Codex check after the fixed-navigation package still failed. Do not infer compatibility from the other native presentation events. A matching web sample (`3E107A68-217C-44C3-BCA8-CED772B59F3E`) had a resolved caret but was canceled after 792 ms alongside a related-field-only change. The reader discarded its completed two-second topology cache and exposed the replacement traversal's incomplete editable list. That publication boundary can manufacture a changed target even when no actual field changed.
+
+The completed editable topology now remains visible while its replacement scan is incomplete. Values are still read from those controls on every capture; no old recipient text is retained. Completed scans publish removals/replacements, field identity changes create a fresh cache, and secure-field discovery suppresses all related controls immediately. An unfinished traversal is continued rather than repeatedly discarded by its timer. A regression reproduced the temporary disappearance; all 177 focused capture/traversal/monitor/session checks passed (`/tmp/autocompletion-related-refresh-verified.log`). One capture test still asserted the superseded source-body cancellation contract; it now separately verifies live body updates, stable target identity, and actual target changes. Packaged/live verification of this specific repair remains required.
+
+The related-field refresh package passed signed integrity verification (`/tmp/autocompletion-related-refresh-package.log`) and is running as desktop/helper PIDs 48283/48293. Settings opened by the restart was closed through its own UI; both parent and helper remain live, enabled, and authorized for Accessibility/Input Monitoring. No new Codex visible-ghost confirmation has been obtained for this package.
+
+
+## Multiline layout and interaction shortcuts — September 5
+
+A completion-only layout previously encoded the current caret offset as a paragraph style. That repeated the offset after each explicit paragraph break. The layout now carries a separate insertion-line indent and applies it only to the first paragraph, including type-through. A regression reproduced an 80 pt error on subsequent paragraphs. The signed package was run in an isolated Notes QA note; a three-paragraph ghost and physical Tab acceptance were observed. The user subsequently reported that it was fixed.
+
+The detailed Notes before/after comparison still exposed a narrower issue: the mirrored layout can use the field's outer width and a 16 pt glyph box while Notes uses a 622 pt text container and a 17 pt line pitch. Evidence is `/tmp/autocompletion-notes-before-acceptance.png` and `/tmp/autocompletion-notes-after-acceptance.png`. Do not claim pixel-identical wrapping across all cases. This measured refinement remains open; no guessed per-app inset was added.
+
+Generic web read diagnostics now distinguish failed selection-marker acquisition from provider, range, value, or bounded-text reads, and report recovery. Normal runtime observation recorded `web_read_selection`; it contains no app identity or text and does not establish a Codex-specific cause. Direct Codex visual verification remains unavailable; no new speculative geometry change was made.
+
+Accept and Dismiss shortcuts now travel from native Settings through validated, atomic local preferences and helper configuration into the native event policy. Defaults remain Tab and Escape, clearing restores defaults, conflicts with other Autocomplete Everywhere actions are rejected, and help uses the actual keys. Tests cover persistence, helper delivery, exact modifiers, repetition, key-up consumption, and pass-through without a visible suggestion. Full desktop tests passed (135), protocol tests passed, and the native run had one stale source-body identity assertion from the earlier snapshot contract; that test was corrected to also verify actual target changes, and all six FieldContext tests passed. Packaged shortcut validation is recorded below when performed.
+
+## September 5 — current follow-up queue
+
+- Native shortcut recording: initial library recorder reserved plain Tab/Escape, and the global request registration could intercept the key being recorded. The replacement records local keys, waits for the parent to release the global binding, restores it after recording/Settings exit, and provides visible Reset buttons and modifier feedback. Request reset restores Command-Shift-Space; accept/dismiss restore Tab/Escape.
+- Info hover: user confirmed it appears; the complaint is delay. Keep AppKit tooltip rendering and register app-local delay at 350 ms. Avoid resetting identical tooltips on state updates.
+- Library deferred by user: no sidebar or Writing entry points; identity restoration leaves Library unloaded/unavailable, so no saved entries enter suggestions. No saved files are deleted.
+- Practice flashing reproduced on the packaged app: unchanged draft produced shown -> content_changed -> request loops (e.g. F23E0D97-444F-4798-9DF4-7C108AE258CB cancelled 267 ms after presentation). The dynamic practice status/button changes are removed; instructions and request control remain stable. Final-package recheck passed below.
+- Regression checks: 137 desktop tests and 54 native Settings tests passed; TypeScript passed. Latest signed package log: /tmp/autocompletion-mvp-practice-package.log.
+- Still pending: current LinkedIn Tab acceptance after restoring defaults, the unresolved Codex user report, precise Notes soft-wrap width/pitch, and the broader scenario/release checks above. Earlier success does not close a new user-reported failure.
+
+### Final package checks for this follow-up
+
+The signed package from `/tmp/autocompletion-mvp-practice-package.log` was run with Library absent from navigation and unloaded from identity restoration. The practice request `4AB438C5-0B58-4F45-B801-800076E43A8A` reached presentation in 845 ms and stayed visible for 63.8 seconds until physical Tab acceptance (`accepted_full`). The owned practice field readback confirmed insertion. There was no repeated request/cancel loop during that check. Visual evidence: `/tmp/autocompletion-practice-stable.png`.
+
+Native info hover was visually observed in the running package (`/tmp/autocompletion-fast-hover.png`), alongside visible shortcut Reset buttons. The app-local delay preference is 350 ms; exact OS tooltip latency was not instrumented. Recording the existing request shortcut completed without invoking a suggestion during the recording check.
+
+The LinkedIn follow-up did not establish a working acceptance path. The controlled, initially empty composer received only an owned QA draft. A web sample during this investigation had unresolved geometry and returned silence; later browser UI key operations did not establish physical global-shortcut delivery. Therefore this does not prove a Tab insertion fix or a specific LinkedIn root cause. The entire owned QA draft was removed, the empty composer was verified, and the modal was dismissed without posting. LinkedIn acceptance, the user's Codex failure, and precise Notes soft-wrap geometry remain open.
+
+## Writing Save — September 5
+
+Writing now stages Mode, Timing, and Visibility until explicit Save or Command-S. The footer uses native controls with Revert and unsaved/saving/saved feedback. The scalar Writing IPC/persistence operations were replaced by one validated atomic `saveWriting` update. Outside the local preview, runtime behavior remains on confirmed preferences. Drafts survive section navigation and failed saves; closing checks unsaved edits.
+
+Verified the signed running package from `/tmp/autocompletion-writing-save-package.log`: changing Subtle to Clear enabled Save and showed Unsaved changes, while `preferences.json` still contained Subtle. Clicking Save showed Saved and persisted Clear. Revert restored the saved Clear value from an unsaved Subtle edit. Command-S then saved Subtle, restoring the user's original Automatic / Quick / Subtle settings. The native window screenshot was inspected for footer alignment and controls. No change to the suggestion pipeline was made in this follow-up.
+
+Validation: 138 desktop tests, 56 native Settings tests, and TypeScript passed. Tests cover no pre-save effects, one atomic publication, persistence after reopening, real write failure without runtime changes, acknowledgement/error handling, preserved drafts, and Revert. The broader LinkedIn/Codex/Notes issues above remain open.
+
+## Quieter ghost text and second-line follow-up — September 5
+
+The user finds both visibility presets too opaque. Subtle is reduced from 0.48 to 0.30 and Clear from 0.72 to 0.45. The native preview, desktop configuration, shared protocol validation, and helper defaults/validation change together; the enum preference remains unchanged. This is an appearance adjustment, not proof of second-line or Codex compatibility.
+
+The user separately reports an oversized or missing ghost on Codex's second line. Source inspection found two typography paths worth reproducing: estimated font size derives from caret height, and `webCalibratedTextStyle` scales the AX font by a measured preceding-word width. The latter currently receives only width, with no check that the sample bounds lie on a single visual line. The presenter also rejects a line frame that does not fit in the visible host field. These are investigation leads, not a confirmed Codex cause. No unverified font/geometry patch was bundled into the opacity change.
+
+Focused checks passed: 203 native capture/presenter/layout/configuration/controller tests, 17 desktop configuration/preferences tests, and 42 protocol tests. Package and visual verification recorded below after completion.
+
+The signed package passed `/tmp/autocompletion-quieter-ghost-package.log` and is running (desktop PID 97298, native Settings PID 97305 at verification). The packaged Subtle preview was visually inspected in light and dark fields. The Settings controls were being changed during inspection; no further draft edits or saves were automated. The Codex second-line report remains unresolved.

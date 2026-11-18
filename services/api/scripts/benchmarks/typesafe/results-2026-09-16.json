@@ -1,0 +1,1119 @@
+{
+  "summary": {
+    "requests": 26,
+    "errors": 0,
+    "checks": 102,
+    "passed": 98,
+    "p50_ms": 743.0,
+    "p95_ms": 966.9,
+    "input_tokens": 33832,
+    "output_tokens": 4830
+  },
+  "limits": "Synthetic hand-authored cases, two repeats, concurrency two, no writer comparison, no production data, no retries. Model latency only; not end-to-end product latency.",
+  "results": [
+    {
+      "case": "continuation",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1593,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 649,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.97,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.69,
+          "pass": true
+        }
+      ],
+      "ms": 809.9
+    },
+    {
+      "case": "topic-change",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1592,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 649,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.96,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.49,
+          "pass": true
+        }
+      ],
+      "ms": 831.3
+    },
+    {
+      "case": "ambiguous-yes",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1563,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 641,
+        "output_tokens": 89
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "unclear",
+          "actual": "unclear",
+          "confidence": 0.3,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "unclear",
+          "actual": "use",
+          "confidence": 0.27,
+          "pass": false
+        }
+      ],
+      "ms": 742.4
+    },
+    {
+      "case": "date-correction",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1679,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 673,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.97,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "superseded",
+          "actual": "superseded",
+          "confidence": 0.88,
+          "pass": true
+        }
+      ],
+      "ms": 752.3
+    },
+    {
+      "case": "partial-correction",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1670,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 668,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.93,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "superseded",
+          "confidence": 0.76,
+          "pass": false
+        }
+      ],
+      "ms": 778.5
+    },
+    {
+      "case": "same-topic-new-task",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1694,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 677,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.66,
+          "pass": true
+        }
+      ],
+      "ms": 746.9
+    },
+    {
+      "case": "unrelated-recent",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 3,
+      "request_bytes": 2557,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 888,
+        "output_tokens": 138
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.93,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.91,
+          "pass": true
+        },
+        {
+          "id": "s1",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.55,
+          "pass": true
+        }
+      ],
+      "ms": 719.0
+    },
+    {
+      "case": "language-not-task",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1633,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 660,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.9,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.56,
+          "pass": true
+        }
+      ],
+      "ms": 748.1
+    },
+    {
+      "case": "quoted-correction",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1732,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 677,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.83,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.88,
+          "pass": true
+        }
+      ],
+      "ms": 854.2
+    },
+    {
+      "case": "injection",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 3,
+      "request_bytes": 2588,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 889,
+        "output_tokens": 138
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.51,
+          "pass": true
+        },
+        {
+          "id": "s1",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.96,
+          "pass": true
+        }
+      ],
+      "ms": 742.6
+    },
+    {
+      "case": "two-meetings",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1697,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 664,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.8,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.45,
+          "pass": true
+        }
+      ],
+      "ms": 717.7
+    },
+    {
+      "case": "negation",
+      "repeat": 0,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1641,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 657,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.62,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.88,
+          "pass": true
+        }
+      ],
+      "ms": 693.6
+    },
+    {
+      "case": "continuation",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1593,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 649,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.97,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.74,
+          "pass": true
+        }
+      ],
+      "ms": 718.3
+    },
+    {
+      "case": "topic-change",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1592,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 649,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.95,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.5,
+          "pass": true
+        }
+      ],
+      "ms": 738.0
+    },
+    {
+      "case": "ambiguous-yes",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1563,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 641,
+        "output_tokens": 89
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "unclear",
+          "actual": "unclear",
+          "confidence": 0.25,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "unclear",
+          "actual": "use",
+          "confidence": 0.27,
+          "pass": false
+        }
+      ],
+      "ms": 742.1
+    },
+    {
+      "case": "date-correction",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1679,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 673,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.96,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "superseded",
+          "actual": "superseded",
+          "confidence": 0.87,
+          "pass": true
+        }
+      ],
+      "ms": 754.3
+    },
+    {
+      "case": "partial-correction",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1670,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 668,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.94,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "superseded",
+          "confidence": 0.77,
+          "pass": false
+        }
+      ],
+      "ms": 760.1
+    },
+    {
+      "case": "same-topic-new-task",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1694,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 677,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.63,
+          "pass": true
+        }
+      ],
+      "ms": 740.2
+    },
+    {
+      "case": "unrelated-recent",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 3,
+      "request_bytes": 2557,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 888,
+        "output_tokens": 138
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.92,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.92,
+          "pass": true
+        },
+        {
+          "id": "s1",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.49,
+          "pass": true
+        }
+      ],
+      "ms": 813.0
+    },
+    {
+      "case": "language-not-task",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1633,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 660,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.9,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.62,
+          "pass": true
+        }
+      ],
+      "ms": 743.0
+    },
+    {
+      "case": "quoted-correction",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1732,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 677,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.82,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.9,
+          "pass": true
+        }
+      ],
+      "ms": 742.0
+    },
+    {
+      "case": "injection",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 3,
+      "request_bytes": 2588,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 889,
+        "output_tokens": 138
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.62,
+          "pass": true
+        },
+        {
+          "id": "s1",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.97,
+          "pass": true
+        }
+      ],
+      "ms": 714.4
+    },
+    {
+      "case": "two-meetings",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1697,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 664,
+        "output_tokens": 90
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.79,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.38,
+          "pass": true
+        }
+      ],
+      "ms": 727.4
+    },
+    {
+      "case": "negation",
+      "repeat": 1,
+      "padding": 0,
+      "questions": 2,
+      "request_bytes": 1641,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 657,
+        "output_tokens": 88
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "same",
+          "actual": "same",
+          "confidence": 0.6,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.9,
+          "pass": true
+        }
+      ],
+      "ms": 718.7
+    },
+    {
+      "case": "unrelated-recent",
+      "repeat": 0,
+      "padding": 22,
+      "questions": 25,
+      "request_bytes": 32447,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 8524,
+        "output_tokens": 1250
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.96,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.89,
+          "pass": true
+        },
+        {
+          "id": "s1",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.6,
+          "pass": true
+        },
+        {
+          "id": "noise0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.96,
+          "pass": true
+        },
+        {
+          "id": "noise1",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise2",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise3",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise4",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise5",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise6",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise7",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise8",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise9",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise10",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise11",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise12",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise13",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise14",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.97,
+          "pass": true
+        },
+        {
+          "id": "noise15",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise16",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise17",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise18",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise19",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise20",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise21",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        }
+      ],
+      "ms": 966.9
+    },
+    {
+      "case": "unrelated-recent",
+      "repeat": 1,
+      "padding": 22,
+      "questions": 25,
+      "request_bytes": 32447,
+      "model": "jev-1.13.0",
+      "usage": {
+        "input_tokens": 8524,
+        "output_tokens": 1250
+      },
+      "checks": [
+        {
+          "id": "task_relation",
+          "expected": "different",
+          "actual": "different",
+          "confidence": 0.95,
+          "pass": true
+        },
+        {
+          "id": "s0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.9,
+          "pass": true
+        },
+        {
+          "id": "s1",
+          "expected": "use",
+          "actual": "use",
+          "confidence": 0.6,
+          "pass": true
+        },
+        {
+          "id": "noise0",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.97,
+          "pass": true
+        },
+        {
+          "id": "noise1",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise2",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise3",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise4",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise5",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise6",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise7",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise8",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise9",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise10",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise11",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise12",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise13",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise14",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise15",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise16",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise17",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise18",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise19",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.98,
+          "pass": true
+        },
+        {
+          "id": "noise20",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        },
+        {
+          "id": "noise21",
+          "expected": "irrelevant",
+          "actual": "irrelevant",
+          "confidence": 0.99,
+          "pass": true
+        }
+      ],
+      "ms": 999.2
+    }
+  ]
+}

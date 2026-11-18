@@ -1,0 +1,21 @@
+import { TransformSettingsStore } from "../src/main/transform-settings";
+import { expect, it, vi } from "vitest";
+vi.mock("electron",()=>({dialog:{},shell:{},safeStorage:{}}));
+import { createNativeActions } from "../src/main/native-actions";
+import { parseNativeRequest } from "../src/main/native-settings-protocol";
+import { ProductState } from "../src/main/state";
+import { LearningService } from "../src/main/learning-service";
+import type { ProductPreferences } from "../src/main/product-preferences";
+import type { AccountSession } from "../src/main/account-session";
+it("Writing only acknowledges the persisted personalization snapshot after controls save", async()=>{
+  let stored: unknown = null; let rejectWrite=false;
+  const learning=new LearningService({storeForAccount:()=>({read:async()=>stored,write:async value=>{if(rejectWrite)throw Error("disk");stored=value;}}),extract:async()=>({evidence:[]}),changed:()=>{}});
+  await learning.setEnvironment("account-A",true,[]);
+  const saveWriting=vi.fn(async()=>{});
+  const handle=createNativeActions({transforms:new TransformSettingsStore({read:async()=>null,write:async()=>{}},()=>{}),previewTransform:async()=>"",learning,state:new ProductState(),preferences:{saveWriting} as unknown as ProductPreferences,account:{} as AccountSession,restartHelper:async()=>{},setShortcutRecording:async()=>{},setShortcut:async()=>{},exercise:()=>{},requestExercise:()=>{}});
+  const request=parseNativeRequest(JSON.stringify({id:"save",action:"saveWriting",payload:{automaticSuggestions:true,timing:"balanced",visibility:"subtle",personalization:{accountSubject:"account-A",enabled:true,edits:[],forgetIds:[],reset:false}}}));
+  expect(await handle(request)).toEqual({personalization:{enabled:true,revision:1,preferences:[]}});
+  expect(saveWriting).toHaveBeenCalledWith({automaticSuggestions:true,timing:"balanced",visibility:"subtle"});
+  rejectWrite=true; await expect(handle(request)).rejects.toThrow("Personalization could not be saved");
+  learning.dispose();
+});

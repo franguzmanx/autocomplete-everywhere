@@ -1,0 +1,58 @@
+name: macOS build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macos-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and package on Apple Silicon
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7.0.1
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2.2.0
+        with:
+          bun-version: 1.3.14
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check TypeScript
+        run: bun run check
+
+      - name: Run TypeScript tests
+        run: bun run test
+
+      - name: Test Swift helper
+        run: swift test --package-path native/macos
+
+      - name: Package unsigned Mac app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: bun run --filter @autocompletion/desktop package:mac
+
+      - name: Archive Mac app preserving bundle permissions
+        run: ditto -c -k --sequesterRsrc --keepParent apps/desktop/dist/mac-arm64/AutocompleteEverywhere.app apps/desktop/dist/AutocompleteEverywhere-macOS-arm64-unsigned.zip
+
+      - name: Upload Mac app
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: AutocompleteEverywhere-macOS-arm64-unsigned
+          path: apps/desktop/dist/AutocompleteEverywhere-macOS-arm64-unsigned.zip
+          if-no-files-found: error
+          retention-days: 7

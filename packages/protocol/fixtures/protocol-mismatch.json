@@ -1,0 +1,9 @@
+{
+  "protocolVersion": 1,
+  "type": "hello",
+  "payload": {
+    "platform": "macos",
+    "helperVersion": "0.1.0",
+    "capabilities": []
+  }
+}
