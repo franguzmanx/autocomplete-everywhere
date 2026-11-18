@@ -8,6 +8,8 @@ struct ContextView: View {
     private func text(_ en: String, _ es: String) -> String { store.language == .es ? es : en }
     var body: some View {
         Form {
+            // Disable the controls, not the Form: a disabled Form cannot scroll.
+            Group {
             Section {
                 Toggle(text("Remember context", "Recordar contexto"), isOn: Binding(get: { store.context.enabled }, set: { store.perform(.contextSetEnabled($0)) }))
                 Text(text("Autocomplete Everywhere reads visible content in your active app to connect related work. History is encrypted locally and kept for 30 days. Relevant text is sent to AI providers for suggestions and embeddings. Provider retention policies apply; this is not a zero-retention service.", "Autocomplete Everywhere lee el contenido visible de la app activa para relacionar tu trabajo. El historial se cifra localmente y se conserva 30 días. El texto relevante se envía a proveedores de IA para sugerencias y representaciones semánticas. Se aplican las políticas de retención del proveedor; no es un servicio sin retención."))
@@ -89,9 +91,10 @@ struct ContextView: View {
                     }
                 }
             }
+            }
+            .disabled(store.status?.isSignedIn != true || store.connectionClosed)
         }
         .formStyle(.grouped)
-        .disabled(store.status?.isSignedIn != true || store.connectionClosed)
     }
     private enum EntryMode { case history, reference, used }
     @ViewBuilder private func entries(_ items: [ContextState.Entry], mode: EntryMode) -> some View {

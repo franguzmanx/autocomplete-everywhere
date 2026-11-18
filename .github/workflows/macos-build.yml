@@ -52,6 +52,8 @@ jobs:
         run: ditto -c -k --sequesterRsrc --keepParent apps/desktop/dist/mac-arm64/AutocompleteEverywhere.app apps/desktop/dist/AutocompleteEverywhere-macOS-arm64-unsigned.zip
 
       - name: Upload Mac app
+        # Artifact storage quota must not fail a build that passed.
+        continue-on-error: true
         uses: actions/upload-artifact@v7.0.1
         with:
           name: AutocompleteEverywhere-macOS-arm64-unsigned
