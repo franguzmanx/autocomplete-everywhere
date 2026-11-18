@@ -13,8 +13,8 @@ type Environment = Readonly<Record<string, string | undefined>>;
 
 const DEFAULT_REDIRECT_URI = "http://127.0.0.1:43119/callback";
 
-// The project ships without a hosted backend. Every deployment supplies its
-// own API and identity provider through these variables.
+// The project ships without a hosted backend. A deployment that hosts one
+// supplies its API and identity provider through these variables.
 const REQUIRED_VARIABLES = {
   apiUrl: "AUTOCOMPLETION_API_URL",
   authorizationEndpoint: "AUTOCOMPLETION_CLERK_AUTHORIZATION_URL",
@@ -61,4 +61,24 @@ export function resolveDesktopRuntimeConfig(
     revocationEndpoint: required("revocationEndpoint"),
     manageAccountUrl: required("manageAccountUrl"),
   };
+}
+
+export type DesktopBackend =
+  | { mode: "local" }
+  | { mode: "hosted"; config: DesktopRuntimeConfig };
+
+/**
+ * No hosted variable means local mode: the API runs inside the app with the
+ * user's own AI Gateway key. Any hosted variable selects hosted mode, and a
+ * partial set fails with the missing names instead of falling back silently.
+ */
+export function resolveBackend(
+  environment: Environment,
+  buildDefaults: Environment = {},
+): DesktopBackend {
+  const configured = Object.values(REQUIRED_VARIABLES).some(
+    name => environment[name] || buildDefaults[name],
+  );
+  if (!configured) return { mode: "local" };
+  return { mode: "hosted", config: resolveDesktopRuntimeConfig(environment, buildDefaults) };
 }

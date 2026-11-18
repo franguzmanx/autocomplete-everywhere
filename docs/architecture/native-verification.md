@@ -295,7 +295,7 @@ The checks passed across all JavaScript workspaces, the native suite passed
 apps/desktop/dist/mac-arm64/AutocompleteEverywhere.app
 ```
 
-The package has bundle identifier `com.autocompletion.desktop`. It contains an
+The package has bundle identifier `com.autocompleteeverywhere.desktop`. It contains an
 arm64 executable helper at
 `Contents/Resources/native/AutocompleteHelper`; both app and helper validate on
 disk and satisfy their designated code-signing requirements. The local build is

@@ -6,10 +6,10 @@ import { dialog, shell } from "electron";
 import type { NativeRequest } from "./native-settings-protocol";
 import type { ProductState } from "./state";
 import type { ProductPreferences } from "./product-preferences";
-import type { AccountSession } from "./account-session";
+import type { Account } from "./account-session";
 import { readLibraryImport } from "./library-import";
 
-type Options={transforms:TransformSettingsStore;previewTransform(input:TransformInput):Promise<string>;learning:LearningService;state:ProductState;preferences:ProductPreferences;account:AccountSession;restartHelper():Promise<void>;setShortcutRecording(active:boolean):Promise<void>;setShortcut(value:SuggestionKeyBinding | null):Promise<void>;exercise(active:boolean):void;requestExercise():void};
+type Options={transforms:TransformSettingsStore;previewTransform(input:TransformInput):Promise<string>;learning:LearningService;state:ProductState;preferences:ProductPreferences;account:Account;restartHelper():Promise<void>;setShortcutRecording(active:boolean):Promise<void>;setShortcut(value:SuggestionKeyBinding | null):Promise<void>;exercise(active:boolean):void;requestExercise():void};
 export function createNativeActions(options:Options):(request:NativeRequest)=>Promise<unknown>{
   return async request=>{
     const {preferences,account}=options;
@@ -33,6 +33,7 @@ export function createNativeActions(options:Options):(request:NativeRequest)=>Pr
       case "setShortcut":return options.setShortcut(request.payload);
       case "setAppEnabled":return preferences.setAppEnabled(request.payload.appId,request.payload.enabled);
       case "beginSignIn":return account.beginSignIn();
+      case "setApiKey":return account.setApiKey(request.payload);
       case "signOut":return account.signOut();
       case "openManageAccount":{
         if(options.state.snapshot().account.state!=="signed_in")throw new Error("Sign in first");

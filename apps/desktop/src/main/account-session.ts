@@ -15,8 +15,22 @@ export function libraryFileForAccount(root:string, subject:string, originalOwner
 const identitySchema=z.object({sub:z.string().min(1).max(256),name:z.string().max(256).optional(),email:z.string().max(320).optional()});
 type Options={store:SecureStore;root:string;state:ProductState;config:DesktopRuntimeConfig;openExternal(url:string):Promise<void>;invalidate():void;changed():void;request?:typeof fetch};
 
+/** What the product needs from an account, hosted or local. */
+export interface Account {
+  readonly tokenProvider:{getAccessToken(forceRefresh?:boolean):Promise<string>};
+  readonly library:LocalLibrary|null;
+  initialize():Promise<void>;
+  restoreIdentity():Promise<void>;
+  beginSignIn():Promise<void>;
+  setApiKey(value:string):Promise<void>;
+  expire():void;
+  signOut():Promise<void>;
+  openManageAccount():Promise<void>;
+  dispose():void;
+}
+
 /** Owns credential transitions and account-scoped library lifetime in one place. */
-export class AccountSession {
+export class AccountSession implements Account {
   readonly tokenProvider:OAuthTokenProvider;
   library:LocalLibrary|null=null;
   private epoch=0;
@@ -112,5 +126,6 @@ export class AccountSession {
     }).then(r=>r.body?.cancel()).catch(()=>{});
   }
   async openManageAccount():Promise<void>{await this.options.openExternal(this.options.config.manageAccountUrl);}
+  async setApiKey():Promise<void>{throw new Error("This build signs in with an account.");}
   dispose():void{this.epoch++;this.tokenProvider.invalidate();this.library?.unload();this.library=null;}
 }

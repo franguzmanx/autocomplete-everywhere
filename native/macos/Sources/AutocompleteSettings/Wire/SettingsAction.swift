@@ -36,6 +36,7 @@ enum SettingsAction: Sendable, Equatable {
     case getDefaultTransforms
     case resume
     case beginSignIn
+    case setApiKey(String)
     case signOut
     case openManageAccount
     case restartHelper
@@ -75,6 +76,7 @@ enum SettingsAction: Sendable, Equatable {
         case .ready: "ready"
         case .resume: "resume"
         case .beginSignIn: "beginSignIn"
+        case .setApiKey: "setApiKey"
         case .signOut: "signOut"
         case .openManageAccount: "openManageAccount"
         case .restartHelper: "restartHelper"
@@ -101,6 +103,7 @@ enum SettingsAction: Sendable, Equatable {
         case .contextDelete(let id), .contextPin(let id), .contextUnpin(let id): try container.encode(["id": id])
         case .contextSearch(let query): try container.encode(["query": query])
         case .contextAddReference(let text): try container.encode(["text": text])
+        case .setApiKey(let key): try container.encode(key)
         case .contextConnect(let provider), .contextDisconnect(let provider): try container.encode(["provider": provider])
         case .contextHistoryPrevious, .contextHistoryMore, .contextRequestScreenPermission, .contextClear, .contextRefresh: try container.encodeNil()
         case .getDefaultTransforms, .ready, .resume, .beginSignIn, .signOut, .openManageAccount, .restartHelper,

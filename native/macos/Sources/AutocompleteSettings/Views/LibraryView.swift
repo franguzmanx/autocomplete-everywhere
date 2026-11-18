@@ -15,7 +15,7 @@ struct LibraryView: View {
                 } description: {
                     Text(l10n[.librarySignedOutDetail])
                 } actions: {
-                    Button(l10n[.signIn]) { store.perform(.beginSignIn) }
+                    Button(store.signInTitle(for: status)) { store.signIn() }
                         .disabled(store.isBusy(.beginSignIn))
                 }
             } else if !status.libraryAvailable {

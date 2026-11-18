@@ -4,7 +4,7 @@ import { access, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const expectedBundleIdentifier = "com.autocompletion.desktop";
+const expectedBundleIdentifier = "com.autocompleteeverywhere.desktop";
 const defaultAppPath = fileURLToPath(
   new URL("../dist/mac-arm64/AutocompleteEverywhere.app", import.meta.url),
 );

@@ -1889,7 +1889,7 @@ final class ActiveFieldCaptureTests: XCTestCase {
 
     func testOwnProcessIsBlockedBeforeReadingText() {
         let reader = FakeAccessibilityReader(
-            bundleIdentifier: "com.autocompletion.desktop",
+            bundleIdentifier: "com.autocompleteeverywhere.desktop",
             webContent: true,
             text: "must never be read",
             selection: NSRange(location: 0, length: 0)

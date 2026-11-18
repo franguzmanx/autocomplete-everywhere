@@ -101,8 +101,10 @@ struct GeneralView: View {
     @ViewBuilder
     private var recovery: some View {
         switch condition {
+        case .apiKeyMissing:
+            Button(l10n[.apiKeyAdd]) { store.signIn() }
         case .signedOut, .sessionExpired:
-            Button(l10n[.signIn]) { store.perform(.beginSignIn) }
+            Button(l10n[.signIn]) { store.signIn() }
                 .disabled(store.isBusy(.beginSignIn))
         case .helperUnavailable:
             Button(l10n[.restartHelper]) { store.perform(.restartHelper) }

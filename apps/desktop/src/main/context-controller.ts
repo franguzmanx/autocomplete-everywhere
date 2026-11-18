@@ -30,6 +30,7 @@ export class ContextController {
       executable: string;
       apiUrl: string;
       tokenProvider: { getAccessToken(): Promise<string> };
+      request?: typeof fetch;
       visionVerified: boolean;
       open(url: string): Promise<void>;
       changed(): void;

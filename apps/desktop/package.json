@@ -33,7 +33,7 @@
     "vitest": "3.2.7"
   },
   "build": {
-    "appId": "com.autocompletion.desktop",
+    "appId": "com.autocompleteeverywhere.desktop",
     "productName": "AutocompleteEverywhere",
     "executableName": "AutocompleteEverywhere",
     "asar": true,

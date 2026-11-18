@@ -575,6 +575,19 @@ final class SettingsStore {
         perform(.signOut)
     }
 
+    /// Hosted accounts sign in through the browser; a local build asks for the key in Account.
+    func signIn() {
+        if status?.account.usesApiKey == true {
+            navigate(.section(.account))
+        } else {
+            perform(.beginSignIn)
+        }
+    }
+
+    func signInTitle(for status: ProductStatus) -> String {
+        l10n[status.account.usesApiKey ? .apiKeyAdd : .signIn]
+    }
+
     // MARK: - Navigation
 
     func navigate(_ intent: NavigationIntent) {

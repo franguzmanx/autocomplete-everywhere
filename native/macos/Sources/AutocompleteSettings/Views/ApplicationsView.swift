@@ -8,7 +8,7 @@ struct ApplicationsView: View {
     @State private var search = ""
 
     private var rows: [ApplicationRow] {
-        let all = store.applicationRows().filter { !["com.autocompletion.desktop", "com.autocompletion.settings"].contains($0.id) }
+        let all = store.applicationRows().filter { !["com.autocompleteeverywhere.desktop", "com.autocompletion.settings"].contains($0.id) }
         let query = search.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else { return all }
         return all.filter {

@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import {
   MissingRuntimeConfigError,
+  resolveBackend,
   resolveDesktopRuntimeConfig,
 } from "../src/main/runtime-config";
 
@@ -57,5 +58,19 @@ describe("desktop runtime configuration", () => {
     expect(config.apiUrl).toBe("https://override.example.test");
     expect(config.clientId).toBe("local-client");
     expect(config.redirectUri).toBe("http://127.0.0.1:54321/callback");
+  });
+
+  test("runs locally when no hosted backend is configured", () => {
+    expect(resolveBackend({})).toEqual({ mode: "local" });
+    expect(resolveBackend({ AUTOCOMPLETION_CLERK_REDIRECT_URI: "http://127.0.0.1:54321/callback" })).toEqual({ mode: "local" });
+  });
+
+  test("selects the hosted backend from runtime or build-time values", () => {
+    expect(resolveBackend(backend)).toMatchObject({ mode: "hosted", config: { apiUrl: "https://api.example.test" } });
+    expect(resolveBackend({}, backend)).toMatchObject({ mode: "hosted", config: { clientId: "local-client" } });
+  });
+
+  test("rejects a partial hosted configuration instead of falling back to local", () => {
+    expect(() => resolveBackend({ AUTOCOMPLETION_API_URL: "https://api.example.test" })).toThrow(MissingRuntimeConfigError);
   });
 });

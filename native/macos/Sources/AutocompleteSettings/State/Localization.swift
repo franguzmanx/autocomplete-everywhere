@@ -17,6 +17,7 @@ enum L10nKey: String, CaseIterable, Sendable {
     case statusReadyAutomaticDetail, statusReadyOnRequestDetail
     case statusPaused, statusPausedUntilDetail, statusPausedDetail
     case statusSignedOut, statusSignedOutDetail
+    case statusApiKeyMissing, statusApiKeyMissingDetail
     case statusExpired, statusExpiredDetail
     case statusPermissions, statusPermissionsDetail
     case statusHelperUnavailable, statusHelperUnavailableDetail
@@ -78,6 +79,9 @@ enum L10nKey: String, CaseIterable, Sendable {
     case manageAccount, manageAccountDetail, signOut, signOutDetail, signOutConfirmTitle, signOutConfirmDetail
     case notSignedIn, notSignedInDetail, sessionExpired, sessionExpiredDetail, identityUnavailable
     case signedInLabel, privacySection, privacyDetail
+    case apiKeyAdd, apiKeyTitle, apiKeyDetail, apiKeyPlaceholder, apiKeyGet
+    case apiKeySaved, apiKeySavedDetail, apiKeyRemove, apiKeyRemoveConfirmTitle, apiKeyRemoveConfirmDetail
+    case privacyDetailLocal
 
     // Exercise
     case exerciseTitle, exerciseSourceLabel, exerciseReplyLabel
@@ -221,6 +225,8 @@ struct L10n: Sendable, Equatable {
         case .statusPausedDetail: Strings(en: "Suggestions are off until you resume.", es: "Las sugerencias están desactivadas hasta que reanudes.")
         case .statusSignedOut: Strings(en: "Signed out", es: "Sesión cerrada")
         case .statusSignedOutDetail: Strings(en: "Sign in to read context and suggest.", es: "Inicia sesión para leer contexto y sugerir.")
+        case .statusApiKeyMissing: Strings(en: "AI Gateway key needed", es: "Falta la clave de AI Gateway")
+        case .statusApiKeyMissingDetail: Strings(en: "Add your own key in Account to start suggesting.", es: "Añade tu propia clave en Cuenta para empezar a sugerir.")
         case .statusExpired: Strings(en: "Session expired", es: "Sesión caducada")
         case .statusExpiredDetail: Strings(en: "Sign in again to continue.", es: "Vuelve a iniciar sesión para continuar.")
         case .statusPermissions: Strings(en: "Permission needed", es: "Falta un permiso")
@@ -424,6 +430,17 @@ struct L10n: Sendable, Equatable {
         case .sessionExpiredDetail: Strings(en: "Sign in again to continue. Your settings and library are kept.", es: "Vuelve a iniciar sesión para continuar. Tus ajustes y biblioteca se conservan.")
         case .identityUnavailable: Strings(en: "Account details unavailable", es: "Datos de la cuenta no disponibles")
         case .signedInLabel: Strings(en: "Signed in", es: "Sesión iniciada")
+        case .apiKeyAdd: Strings(en: "Add Key…", es: "Añadir clave…")
+        case .apiKeyTitle: Strings(en: "Vercel AI Gateway key", es: "Clave de Vercel AI Gateway")
+        case .apiKeyDetail: Strings(en: "Suggestions use your own key. It is stored encrypted on this Mac and sent only to AI Gateway.", es: "Las sugerencias usan tu propia clave. Se guarda cifrada en este Mac y solo se envía a AI Gateway.")
+        case .apiKeyPlaceholder: Strings(en: "Paste your key", es: "Pega tu clave")
+        case .apiKeyGet: Strings(en: "Get a key…", es: "Obtener una clave…")
+        case .apiKeySaved: Strings(en: "Key saved", es: "Clave guardada")
+        case .apiKeySavedDetail: Strings(en: "Suggestions run on this Mac with your AI Gateway key.", es: "Las sugerencias se ejecutan en este Mac con tu clave de AI Gateway.")
+        case .apiKeyRemove: Strings(en: "Remove Key…", es: "Quitar clave…")
+        case .apiKeyRemoveConfirmTitle: Strings(en: "Remove your AI Gateway key?", es: "¿Quitar tu clave de AI Gateway?")
+        case .apiKeyRemoveConfirmDetail: Strings(en: "Suggestions stop until you add a key again. Your settings are kept.", es: "Las sugerencias se detienen hasta que añadas una clave. Tus ajustes se conservan.")
+        case .privacyDetailLocal: Strings(en: "There is no account and no server of ours. When a suggestion is generated, your draft and the visible context go from this Mac to Vercel AI Gateway with your key. Nothing is learned automatically.", es: "No hay cuenta ni servidor nuestro. Al generar una sugerencia, tu borrador y el contexto visible van de este Mac a Vercel AI Gateway con tu clave. Nada se aprende automáticamente.")
         case .privacySection: Strings(en: "Your data", es: "Tus datos")
         case .privacyDetail: Strings(en: "Your library is encrypted on this Mac. When a suggestion is generated, your draft, the visible context and matching excerpts are sent to the generation service. Nothing is learned automatically; you add and edit sources yourself.", es: "Tu biblioteca está cifrada en este Mac. Al generar una sugerencia, tu borrador, el contexto visible y los fragmentos relevantes se envían al servicio de generación. Nada se aprende automáticamente; tú añades y editas las fuentes.")
 

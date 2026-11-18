@@ -9,50 +9,55 @@ struct AccountView: View {
 
     var body: some View {
         Form {
-            switch status.account.state {
-            case .signedIn:
-                Section {
-                    IdentityRow(identity: status.account.identity)
-                }
-                Section {
-                    ActionRow(
-                        title: l10n[.manageAccount],
-                        detail: nil,
-                        systemImage: "arrow.up.forward.square",
-                        action: { store.perform(.openManageAccount) }
-                    )
-                    ActionRow(
-                        title: l10n[.signOut],
-                        detail: nil,
-                        systemImage: "rectangle.portrait.and.arrow.right",
-                        action: { confirmSignOut = true }
-                    )
-                }
-            case .signedOut:
-                Section {
-                    SignInPrompt(title: l10n[.notSignedIn], detail: l10n[.notSignedInDetail])
-                }
-            case .expired:
-                Section {
-                    SignInPrompt(title: l10n[.sessionExpired], detail: l10n[.sessionExpiredDetail])
+            if status.account.usesApiKey {
+                ApiKeySection(isSaved: status.isSignedIn, confirmRemove: $confirmSignOut)
+            } else {
+                switch status.account.state {
+                case .signedIn:
+                    Section {
+                        IdentityRow(identity: status.account.identity)
+                    }
+                    Section {
+                        ActionRow(
+                            title: l10n[.manageAccount],
+                            detail: nil,
+                            systemImage: "arrow.up.forward.square",
+                            action: { store.perform(.openManageAccount) }
+                        )
+                        ActionRow(
+                            title: l10n[.signOut],
+                            detail: nil,
+                            systemImage: "rectangle.portrait.and.arrow.right",
+                            action: { confirmSignOut = true }
+                        )
+                    }
+                case .signedOut:
+                    Section {
+                        SignInPrompt(title: l10n[.notSignedIn], detail: l10n[.notSignedInDetail])
+                    }
+                case .expired:
+                    Section {
+                        SignInPrompt(title: l10n[.sessionExpired], detail: l10n[.sessionExpiredDetail])
+                    }
                 }
             }
 
             Section {
-                InfoLabel(title: l10n[.privacySection], detail: l10n[.privacyDetail])
+                InfoLabel(title: l10n[.privacySection],
+                          detail: l10n[status.account.usesApiKey ? .privacyDetailLocal : .privacyDetail])
             }
         }
         .formStyle(.grouped)
         .navigationTitle(l10n[.sectionAccount])
         .confirmationDialog(
-            l10n[.signOutConfirmTitle],
+            l10n[status.account.usesApiKey ? .apiKeyRemoveConfirmTitle : .signOutConfirmTitle],
             isPresented: $confirmSignOut,
             titleVisibility: .visible
         ) {
-            Button(l10n[.signOut], role: .destructive) { store.signOut() }
+            Button(l10n[status.account.usesApiKey ? .apiKeyRemove : .signOut], role: .destructive) { store.signOut() }
             Button(l10n[.cancel], role: .cancel) {}
         } message: {
-            Text(l10n[.signOutConfirmDetail])
+            Text(l10n[status.account.usesApiKey ? .apiKeyRemoveConfirmDetail : .signOutConfirmDetail])
         }
     }
 }
@@ -132,5 +137,71 @@ private struct SignInPrompt: View {
                 .disabled(store.isBusy(.beginSignIn))
         }
         .padding(.vertical, 4)
+    }
+}
+
+/// Local builds have no account: the credential is the user's own AI Gateway key.
+private struct ApiKeySection: View {
+    let isSaved: Bool
+    @Binding var confirmRemove: Bool
+
+    @Environment(SettingsStore.self) private var store
+    @Environment(\.l10n) private var l10n
+    @State private var key = ""
+
+    private static let keysURL = URL(string: "https://vercel.com/ai-gateway")!
+
+    private var trimmedKey: String {
+        key.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func save() {
+        guard !trimmedKey.isEmpty else { return }
+        store.perform(.setApiKey(trimmedKey))
+        // The field never holds a key longer than the request that saves it.
+        key = ""
+    }
+
+    var body: some View {
+        if isSaved {
+            Section {
+                HStack(spacing: 16) {
+                    TitleDetail(l10n[.apiKeyTitle], detail: l10n[.apiKeySavedDetail])
+                    Spacer(minLength: 8)
+                    HStack(spacing: 8) {
+                        Circle()
+                            .fill(.green)
+                            .frame(width: 8, height: 8)
+                        Text(l10n[.apiKeySaved])
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
+            }
+            Section {
+                ActionRow(
+                    title: l10n[.apiKeyRemove],
+                    detail: nil,
+                    systemImage: "key.slash",
+                    action: { confirmRemove = true }
+                )
+            }
+        } else {
+            Section {
+                TitleDetail(l10n[.apiKeyTitle], detail: l10n[.apiKeyDetail])
+                    .padding(.vertical, 4)
+                HStack(spacing: 8) {
+                    SecureField(l10n[.apiKeyTitle], text: $key, prompt: Text(l10n[.apiKeyPlaceholder]))
+                        .labelsHidden()
+                        .textFieldStyle(.roundedBorder)
+                        .onSubmit(save)
+                    Button(l10n[.save], action: save)
+                        .buttonStyle(.borderedProminent)
+                        .disabled(trimmedKey.isEmpty || store.isBusy(.setApiKey("")))
+                }
+                Link(l10n[.apiKeyGet], destination: Self.keysURL)
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 import type { ProductStatus } from "../shared/contracts";
 export function statusLabel(status:ProductStatus):string{
   const es=status.uiLanguage==="es";
+  if(status.account.kind==="api_key"&&status.account.state!=="signed_in")return es?"Falta la clave de AI Gateway":"Add your AI Gateway key";
   if(status.account.state==="expired")return es?"Volvé a iniciar sesión":"Sign in again";
   if(status.account.state!=="signed_in")return es?"Iniciá sesión":"Sign in";
   if(status.permissions.accessibility!=="granted"||status.permissions.inputMonitoring!=="granted")return es?"Faltan permisos":"Needs permission";

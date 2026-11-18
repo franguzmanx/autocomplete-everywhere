@@ -13,7 +13,7 @@ import { HttpSuggestionTransport } from '../src/main/suggestion-transport';
 import { SuggestionRequestFailure } from '../src/main/suggestion-coordinator';
 import { generationFailureKindSchema, generationFailureReasonSchema, type SuggestionRequest } from '../../../packages/protocol/src';
 
-app.setName('@autocompletion/desktop');
+app.setName('Autocomplete Everywhere');
 const emit = (value: unknown) => process.stdout.write(JSON.stringify(value) + '\n');
 let calls = 0;
 const timer = setTimeout(() => { emit({outcome:'probe_deadline',calls}); app.exit(2); }, 55_000);
@@ -21,7 +21,7 @@ async function main() {
   await app.whenReady();
   app.dock?.hide();
   const config = resolveDesktopRuntimeConfig(process.env);
-  const store = new SecureStore(join(homedir(),'Library/Application Support/@autocompletion/desktop/secure/product-state.bin'));
+  const store = new SecureStore(join(homedir(),'Library/Application Support/Autocomplete Everywhere/secure/product-state.bin'));
   const tokens = new OAuthTokenProvider({
     store: { read: () => store.read<StoredProductData>(), write: async () => { throw new Error('probe_read_only'); } },
     tokenEndpoint: config.tokenEndpoint, clientId: config.clientId,

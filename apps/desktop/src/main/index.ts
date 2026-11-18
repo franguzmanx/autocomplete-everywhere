@@ -14,7 +14,7 @@ import { applyHelperMessage } from "./helper-messages";
 import { createFixtureDiagnostics } from "./fixture-diagnostics";
 import { PipelineTraceWriter } from "./pipeline-trace";
 import { SecureStore } from "./secure-store";
-import { MissingRuntimeConfigError, resolveDesktopRuntimeConfig } from "./runtime-config";
+import { MissingRuntimeConfigError, resolveBackend } from "./runtime-config";
 import { RuntimeDiagnostics } from "./runtime-diagnostics";
 import { claimSingleInstance } from "./single-instance";
 import { ProductState } from "./state";
@@ -24,7 +24,8 @@ import { createSuggestionBootstrap } from "./suggestion-bootstrap";
 import { HttpSuggestionTransport } from "./suggestion-transport";
 import { createProductTray } from "./tray";
 import { ContextualSuggestionSource } from "./contextual-suggestion-source";
-import { AccountSession } from "./account-session";
+import { AccountSession, type Account } from "./account-session";
+import { LocalAccount, LOCAL_API_ORIGIN } from "./local-account";
 import { NativeSettings } from "./native-settings";
 import { createNativeActions } from "./native-actions";
 
@@ -35,16 +36,19 @@ let settings:NativeSettings|null=null;
 let helperManager:HelperProcessManager|null=null;
 let coordinator:ReturnType<typeof createSuggestionBootstrap>=null;
 let preferences:ProductPreferences|null=null;
-let account:AccountSession|null=null;
+let account:Account|null=null;
 let learning:LearningService|null=null;
 let disposeTray:(()=>void)|undefined;
 let unsubscribe:(()=>void)|undefined;
 const state=new ProductState();
 const fixtureDiagnostics=createFixtureDiagnostics(process.env);
 
+// Electron's name selects the user data folder and the OS encryption identity.
+// It is set before the single-instance lock, which lives in that folder.
+// Changing this name disconnects saved credentials.
+app.setName("Autocomplete Everywhere");
+
 function startPrimaryInstance():void{
-  // Electron's name is also the OS encryption identity. Product branding belongs
-  // to the native window and tray; changing this name disconnects saved credentials.
   app.enableSandbox();
   void app.whenReady().then(async()=>{
     app.dock?.hide();
@@ -52,7 +56,7 @@ function startPrimaryInstance():void{
     const secureStore=new SecureStore(join(root,"secure","product-state.bin"));
     const runtime=new RuntimeDiagnostics(join(root,"runtime-status.json"));
     const trace=new PipelineTraceWriter(join(root,"pipeline-trace.ndjson"));
-    const config=resolveDesktopRuntimeConfig(process.env,__AUTOCOMPLETION_BUILD_CONFIG__);
+    const backend=resolveBackend(process.env,__AUTOCOMPLETION_BUILD_CONFIG__);
     const controls=new ProductPreferences(join(root,"preferences.json"),state);preferences=controls;
     try { await controls.load(); }
     catch (error) {
@@ -97,14 +101,25 @@ function startPrimaryInstance():void{
       if(helperManager?.state!=="running")return;
       const next=configuration();helperManager.send({...next,payload:{...next.payload,enabled:false}});helperManager.send(next);
     };
-    const session=new AccountSession({store:secureStore,root:join(root,"secure"),state,config,openExternal:url=>shell.openExternal(url),invalidate,changed:()=>settings?.publish()});account=session;
-    contextController=new ContextController({root,apiUrl:config.apiUrl,tokenProvider:session.tokenProvider,
+    // Without a hosted backend the API runs in process with the user's own AI Gateway key.
+    const accountOptions={state,openExternal:(url:string)=>shell.openExternal(url),invalidate,changed:()=>settings?.publish()};
+    let session:Account;
+    let api:{apiUrl:string;tokenProvider:Account["tokenProvider"];request?:typeof fetch};
+    if(backend.mode==="hosted"){
+      session=new AccountSession({...accountOptions,store:secureStore,root:join(root,"secure"),config:backend.config});
+      api={apiUrl:backend.config.apiUrl,tokenProvider:session.tokenProvider};
+    }else{
+      const local=new LocalAccount({...accountOptions,store:new SecureStore(join(root,"secure","local-backend.bin"))});
+      session=local;api={apiUrl:LOCAL_API_ORIGIN,tokenProvider:local.tokenProvider,request:local.request};
+    }
+    account=session;
+    contextController=new ContextController({root,...api,
       executable:app.isPackaged?join(process.resourcesPath,"native","AutocompleteContextService"):join(__dirname,"../../../../native/macos/.build/release/AutocompleteContextService"),
       visionVerified:process.env.AUTOCOMPLETION_CONTEXT_VISION_VERIFIED==="1",open:url=>shell.openExternal(url),
       changed:()=>{sync();settings?.publish();},send:message=>{if(helperManager?.state==="running")helperManager.send(message);},
       invalidate:ids=>{coordinator?.invalidate(ids);transformCoordinator?.invalidate(ids);},
     });
-    const learningTransport=new LearningTransport({apiUrl:config.apiUrl,tokenProvider:session.tokenProvider});
+    const learningTransport=new LearningTransport(api);
     const learner=new LearningService({
       storeForAccount:subject=>new SecureStore(learningFileForAccount(join(root,"secure"),subject)),
       extract:(input,signal)=>contextController!.background.run(signal,()=>learningTransport.extract(input,signal)),
@@ -137,7 +152,7 @@ function startPrimaryInstance():void{
       }
       exerciseActive=active;exerciseRequests.clear();state.update({exercise:"idle"});sync();
     };
-    const transport=new HttpSuggestionTransport({apiUrl:config.apiUrl,tokenProvider:session.tokenProvider,trace});
+    const transport=new HttpSuggestionTransport({...api,trace});
     const transforms=new TransformSettingsStore(new SecureStore(join(root,"secure","transforms.bin")),()=>{transformCoordinator?.stop();syncTransforms();settings?.publish();});
     await transforms.restore();
     function syncTransforms():void {
@@ -155,7 +170,7 @@ function startPrimaryInstance():void{
       requestExercise:()=>{if(exerciseActive)requestSuggestion();},
     });
     settings=new NativeSettings({
-      executable:app.isPackaged?join(process.resourcesPath,"native","AutocompleteEverywhere.app","Contents","MacOS","Autocomplete Everywhere"):join(__dirname,"../../native-ui/AutocompleteEverywhere.app/Contents/MacOS/AutocompleteEverywhere"),
+      executable:app.isPackaged?join(process.resourcesPath,"native","AutocompleteEverywhere.app","Contents","MacOS","AutocompleteEverywhere"):join(__dirname,"../../native-ui/AutocompleteEverywhere.app/Contents/MacOS/AutocompleteEverywhere"),
       snapshot:()=>({context:contextController!.snapshot(),status:state.snapshot(),transforms:transforms.get(),entries:session.library&&state.snapshot().account.state==="signed_in"?session.library.list():[]}),
       handle:request=>request.action.startsWith("context_")?contextController!.action(request):nativeActions(request),closed:()=>{exercise(false);void shortcut.setRecording(false).catch(()=>state.update({shortcutRegistered:false}));},
       unavailable:()=>dialog.showErrorBox("Autocomplete Everywhere",state.snapshot().uiLanguage==="es"?"No se pudo abrir Ajustes. Volvé a abrir Autocomplete Everywhere.":"Settings could not be opened. Reopen Autocomplete Everywhere."),
@@ -249,7 +264,7 @@ function startPrimaryInstance():void{
     app.on("activate",()=>settings?.show());
     settings.show();
     await Promise.allSettled([helperManager.start(),session.initialize()]);
-  }).catch(error=>dialog.showErrorBox("Autocomplete Everywhere",error instanceof MissingRuntimeConfigError?`${error.message} See the README section "Bring your own backend".`:"Autocomplete Everywhere could not start. Your saved data has not been changed. Reopen the app to try again."));
+  }).catch(error=>dialog.showErrorBox("Autocomplete Everywhere",error instanceof MissingRuntimeConfigError?`${error.message} See "Hosted mode" in the README.`:"Autocomplete Everywhere could not start. Your saved data has not been changed. Reopen the app to try again."));
   app.on("window-all-closed",()=>{});
   app.on("before-quit",()=>{contextController?.dispose();outcomeUploader?.dispose();globalShortcut.unregisterAll();unsubscribe?.();disposeTray?.();settings?.stop();account?.dispose();learning?.dispose();preferences?.dispose();coordinator?.stop();transformCoordinator?.stop();helperManager?.stop();});
 }

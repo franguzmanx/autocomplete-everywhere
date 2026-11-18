@@ -5,6 +5,7 @@ import SwiftUI
 enum ProductCondition: Equatable, Sendable {
     case helperUnavailable
     case helperStarting
+    case apiKeyMissing
     case signedOut
     case sessionExpired
     case permissionsRequired
@@ -24,6 +25,8 @@ enum ProductCondition: Equatable, Sendable {
     init(status: ProductStatus) {
         if status.helperState == .unavailable {
             self = .helperUnavailable
+        } else if status.account.usesApiKey, status.account.state != .signedIn {
+            self = .apiKeyMissing
         } else if status.account.state == .signedOut {
             self = .signedOut
         } else if status.account.state == .expired {
@@ -48,7 +51,7 @@ enum ProductCondition: Equatable, Sendable {
     var tone: Tone {
         switch self {
         case .readyAutomatic, .readyOnRequest: .positive
-        case .paused, .permissionsRequired, .signedOut, .sessionExpired, .offline: .attention
+        case .paused, .permissionsRequired, .apiKeyMissing, .signedOut, .sessionExpired, .offline: .attention
         case .helperUnavailable, .serviceError: .problem
         case .helperStarting: .neutral
         }
@@ -67,6 +70,7 @@ enum ProductCondition: Equatable, Sendable {
         switch self {
         case .helperUnavailable: l10n[.statusHelperUnavailable]
         case .helperStarting: l10n[.statusHelperStarting]
+        case .apiKeyMissing: l10n[.statusApiKeyMissing]
         case .signedOut: l10n[.statusSignedOut]
         case .sessionExpired: l10n[.statusExpired]
         case .permissionsRequired: l10n[.statusPermissions]
@@ -81,6 +85,7 @@ enum ProductCondition: Equatable, Sendable {
         switch self {
         case .helperUnavailable: l10n[.statusHelperUnavailableDetail]
         case .helperStarting: l10n[.statusHelperStartingDetail]
+        case .apiKeyMissing: l10n[.statusApiKeyMissingDetail]
         case .signedOut: l10n[.statusSignedOutDetail]
         case .sessionExpired: l10n[.statusExpiredDetail]
         case .permissionsRequired: l10n[.statusPermissionsDetail]

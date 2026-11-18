@@ -73,6 +73,8 @@ export type ProductStatus = {
   account: {
     state: "signed_out" | "signed_in" | "expired";
     identity: AccountIdentity | null;
+    /** Present when the credential is the user's own AI Gateway key. */
+    kind?: "api_key";
   };
   enabled: boolean;
   activity: SuggestionActivitySummary;

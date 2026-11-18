@@ -31,14 +31,14 @@ const verifierPath = join(
 const temporaryDirectories: string[] = [];
 
 async function createSignedApp(
-  bundleIdentifier = "com.autocompletion.desktop",
+  bundleIdentifier = "com.autocompleteeverywhere.desktop",
 ): Promise<{ appPath: string; helperPath: string; infoPath: string }> {
   const directory = await mkdtemp(join(tmpdir(), "autocompletion-package-qa-"));
   temporaryDirectories.push(directory);
 
   const appPath = join(directory, "AutocompleteEverywhere.app");
   const contentsPath = join(appPath, "Contents");
-  const mainExecutablePath = join(contentsPath, "MacOS", "Autocomplete Everywhere");
+  const mainExecutablePath = join(contentsPath, "MacOS", "AutocompleteEverywhere");
   const helperPath = join(
     contentsPath,
     "Resources",
@@ -68,7 +68,7 @@ async function createSignedApp(
     `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-  <key>CFBundleExecutable</key><string>Autocomplete Everywhere</string>
+  <key>CFBundleExecutable</key><string>AutocompleteEverywhere</string>
   <key>CFBundleIdentifier</key><string>${bundleIdentifier}</string>
   <key>CFBundleName</key><string>Autocomplete Everywhere</string>
   <key>CFBundleIconName</key><string>AutocompleteEverywhere</string><key>CFBundlePackageType</key><string>APPL</string>
@@ -166,7 +166,7 @@ macOnly("rejects an unexpected bundle identifier", async () => {
 
   expect(result.exitCode).not.toBe(0);
   expect(result.stderr).toContain(
-    'Unexpected bundle identifier "com.example.wrong"; expected "com.autocompletion.desktop"',
+    'Unexpected bundle identifier "com.example.wrong"; expected "com.autocompleteeverywhere.desktop"',
   );
 });
 

@@ -9,8 +9,9 @@ Accessibility API, with no per-app integrations.
 
 Nothing sends, submits, publishes, or clicks automatically.
 
-> **Status:** early and experimental. There is no hosted service and no signed
-> download. You build the app and run your own backend.
+> **Status:** early and experimental. There is no signed download yet. You
+> build the app and add your own [Vercel AI Gateway](https://vercel.com/ai-gateway)
+> key. No account and no server are required.
 
 ## What it does
 
@@ -36,22 +37,29 @@ Privacy rules that the code enforces:
 ## How it works
 
 ```
- text field ──(1) Accessibility──▶ Swift helper ──(2) protocol v4──▶ Electron app
-     ▲                                  │                                │
-     └────(5) ghost text / insertion────┘                    (3) HTTPS + OAuth token
-                                        ▲                                ▼
-                                        └──────(4) suggestion────── your API ──▶ model
+ text field ──(1) Accessibility──▶ Swift helper ──(2) protocol──▶ Electron app
+     ▲                                  │                             │
+     └────(5) ghost text / insertion────┘                  (3) your AI Gateway key
+                                        ▲                             ▼
+                                        └────(4) suggestion──── Vercel AI Gateway ──▶ model
 ```
 
 The helper owns focus, capture, ghost text, keys and insertion. The Electron
-app owns the account, settings and request transport. The API authenticates
-the request and calls the model.
+app owns settings, the key and the request to the model.
+
+There are two modes:
+
+- **Local (default).** The suggestion API runs inside the app. It opens no
+  port. Your key is encrypted with the macOS Keychain and goes only to Vercel
+  AI Gateway.
+- **Hosted (optional).** The same API runs on a server with sign-in, so users
+  do not need their own key. See [Hosted mode](#hosted-mode).
 
 ## Repository layout
 
 - `apps/desktop`: Electron shell (account, settings, helper lifecycle, request transport).
 - `native/macos`: Swift/AppKit helper, settings UI and local context service.
-- `services/api`: authenticated suggestion, context and outcome API (Hono, deployable to Vercel).
+- `services/api`: suggestion, context and outcome API (Hono). Runs inside the app in local mode, or on Vercel in hosted mode.
 - `packages/protocol`: helper protocol v4 schemas, fixtures and contract tests.
 - `packages/database`: authenticated Postgres access for manual context and suggestion outcomes.
 - `supabase`: schema, RLS policies and pgTAP tests.
@@ -61,18 +69,49 @@ the request and calls the model.
 
 - macOS 14 or later on Apple Silicon, with Xcode.
 - [Bun](https://bun.sh) 1.3.14.
-- Your own backend (next section).
+- A [Vercel AI Gateway](https://vercel.com/ai-gateway) API key.
 
-## Bring your own backend
+## Quick start
 
-This project ships without a hosted backend. You need three services:
+```sh
+bun install
+bun run --filter @autocompletion/desktop package:mac
+open apps/desktop/dist/mac-arm64/AutocompleteEverywhere.app
+```
+
+Then:
+
+1. Open **Settings → Account**, paste your AI Gateway key and save. The app
+   checks the key with the gateway before it stores it.
+2. Grant **Accessibility** and **Input Monitoring** in System Settings →
+   Privacy & Security.
+3. Type in any text field and pause.
+
+Screen Recording is optional. The app uses it only for visual context, after
+separate consent.
+
+The build signs the app with a local Apple Development identity when it finds
+one. macOS ties the permissions to the signature, so an unsigned build can ask
+for them again after each rebuild.
+
+Suggestions use `google/gemini-3.5-flash-lite` through the gateway, with zero
+data retention requested. You pay the gateway for your own usage.
+
+## Hosted mode
+
+Use this mode to run the product for other people: they sign in, and your
+server pays for the model. The app selects it when any hosted variable below
+is set, at run time or at build time. If the set is incomplete, the app stops
+at launch and names the missing variables.
+
+You need:
 
 1. **Identity: [Clerk](https://clerk.com).** Create an application and an
    OAuth application for the desktop client. It is a public client: use PKCE
    and the redirect URI `http://127.0.0.1:43119/callback`.
-2. **Model access: [Vercel AI Gateway](https://vercel.com/ai-gateway).** The
-   API calls Gemini through the gateway. On Vercel the function authenticates
-   with OIDC. Elsewhere, set `AI_GATEWAY_API_KEY`.
+2. **Model access: [Vercel AI Gateway](https://vercel.com/ai-gateway).** On
+   Vercel the function authenticates with OIDC. Elsewhere, set
+   `AI_GATEWAY_API_KEY`.
 3. **Database (optional): Postgres, for example [Supabase](https://supabase.com).**
    It stores manual context and content-free suggestion outcomes. Apply the
    migrations in `supabase/migrations` and set `DATABASE_URL`.
@@ -106,27 +145,20 @@ values; do not put a secret in them.
 | `AUTOCOMPLETION_ACCOUNT_URL` | `https://accounts.example.com/user` |
 | `AUTOCOMPLETION_CLERK_REDIRECT_URI` | optional, defaults to `http://127.0.0.1:43119/callback` |
 
-If a required variable is missing, the app stops at launch and names it.
+```sh
+set -a; source .env.local; set +a
+bun run --filter @autocompletion/desktop package:mac
+```
 
-## Build and test
+## Test
 
 ```sh
-bun install
 bun run check                                   # TypeScript
 bun run test                                    # TypeScript tests
 swift test --package-path native/macos          # Swift tests (macOS)
-
-# Package an unsigned app with your backend baked in
-set -a; source .env.local; set +a
-bun run --filter @autocompletion/desktop package:mac
-open apps/desktop/dist/mac-arm64/AutocompleteEverywhere.app
 ```
 
-On first launch, grant Accessibility permission in System Settings → Privacy &
-Security. Screen Recording is optional and only used for visual context, after
-separate consent.
-
-Package, bundle and environment identifiers keep the `autocompletion` prefix.
+Package and environment identifiers keep the `autocompletion` prefix.
 
 ## Documentation
 

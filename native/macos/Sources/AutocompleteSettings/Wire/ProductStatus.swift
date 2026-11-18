@@ -30,9 +30,18 @@ struct AccountIdentity: Codable, Sendable, Equatable {
     var email: String
 }
 
+/// How the product is authorized. Absent for a hosted account sign-in.
+enum AccountKind: String, Codable, Sendable, Equatable {
+    case apiKey = "api_key"
+}
+
 struct AccountStatus: Codable, Sendable, Equatable {
     var state: AccountState
     var identity: AccountIdentity?
+    var kind: AccountKind? = nil
+
+    /// The credential is the user's own AI Gateway key, entered in this window.
+    var usesApiKey: Bool { kind == .apiKey }
 }
 
 enum AppLanguage: String, Codable, Sendable, CaseIterable, Identifiable {

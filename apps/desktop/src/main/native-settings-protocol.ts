@@ -18,7 +18,7 @@ const payloads = {
   context_request_screen_permission:z.null(),
   context_clear:z.null(),context_refresh:z.null(),
   saveTransforms:TransformSettingsSchema, previewTransform:TransformInputSchema, getDefaultTransforms:z.null(),
-  ready:z.null(), resume:z.null(), beginSignIn:z.null(), signOut:z.null(), openManageAccount:z.null(), restartHelper:z.null(),
+  ready:z.null(), resume:z.null(), beginSignIn:z.null(), setApiKey:z.string().min(1).max(600), signOut:z.null(), openManageAccount:z.null(), restartHelper:z.null(),
   setShortcut:shortcutSchema.nullable(), setShortcutRecording:z.boolean(),
   setInteractionShortcut:z.object({action:z.enum(["accept", "dismiss"]),shortcut:interactionShortcutSchema}).strict(),
   pause:z.enum(["15m","30m","1h","tomorrow"]), setUiLanguage:z.enum(["en","es"]),
